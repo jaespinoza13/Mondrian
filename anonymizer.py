@@ -23,7 +23,7 @@ def write_to_file(result):
             output.write(';'.join(r) + '\n')
 
 
-def get_result_one(data, k=10):
+def get_result_one(data, k=2):
     """
     run mondrian for one time, with k=10
     """
