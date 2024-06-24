@@ -11,7 +11,7 @@
             "program": "${workspaceFolder}/anonymizer.py",
             "console": "integratedTerminal",
             "args":[
-                "s","a","2"
+                "s","a","100"
             ]
         }
     ]

@@ -31,9 +31,9 @@ ATT_NAME = ['id', 'Númeración', 'prov_insc',
 #             'education_num', 'marital_status', 'occupation', 'relationship',
 #             'race', 'sex', 'capital_gain', 'capital_loss', 'hours_per_week',
 #             'native_country', 'class']
-#QI_INDEX = [0]#, 1, 4, 5, 6, 8, 9, 13]
-QI_INDEX = [11,21]#,21]
-IS_CAT = [True,False]#,False]
+QI_INDEX = [11,12,13,14,21,22]#, 1, 4, 5, 6, 8, 9, 13]
+#QI_INDEX = [11,21]#,21]
+IS_CAT = [True,False,True,False,False,True]#,False]
 #IS_CAT = [False]#, True, False, True, True, True, True, True]
 SA_INDEX = -1
 __DEBUG = False
@@ -61,7 +61,7 @@ def read_data():
         intuitive_number.append(0)
         intuitive_order.append(list())
     #data_file = open('data/adult.data')
-    data_file = open('data/defunciones2019_limpio.csv',encoding='utf-8')
+    data_file = open('data/defunciones2019_limpio.csv')
     for line in data_file:
         line = line.strip()
         # remove empty and incomplete lines

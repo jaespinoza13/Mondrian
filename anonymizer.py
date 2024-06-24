@@ -1,8 +1,4 @@
-"""
-run mondrian with given parameters
-"""
-
-# !/usr/bin/env python
+#!/usr/bin/env python
 # coding=utf-8
 from mondrian import mondrian
 from utils.read_adult_data import read_data as read_adult
@@ -13,15 +9,13 @@ DATA_SELECT = 'a'
 RELAX = False
 INTUITIVE_ORDER = None
 
-
 def write_to_file(result):
     """
     write the anonymized result to anonymized.data
     """
-    with open("data/anonymized.data", "w") as output:
+    with open("data/defunciones_anonimizados.csv", "w") as output:
         for r in result:
-            output.write(';'.join(r) + '\n')
-
+            output.write(';'.join(map(str, r)) + '\n')
 
 def get_result_one(data, k=2):
     """
@@ -33,15 +27,11 @@ def get_result_one(data, k=2):
     # Convert numerical values back to categorical values if necessary
     if DATA_SELECT == 'a':
         result = covert_to_raw(result)
-    else:
-        for r in result:
-            r[-1] = ','.join(r[-1])
     # write to anonymized.out
     write_to_file(result)
     data = copy.deepcopy(data_back)
     print("NCP %0.2f" % eval_result[0] + "%")
     print("Running time %0.2f" % eval_result[1] + " seconds")
-
 
 def get_result_k(data):
     """
@@ -54,10 +44,10 @@ def get_result_k(data):
         result, eval_result = mondrian(data, k, RELAX)
         if DATA_SELECT == 'a':
             result = covert_to_raw(result)
+        write_to_file(result)
         data = copy.deepcopy(data_back)
         print("NCP %0.2f" % eval_result[0] + "%")
         print("Running time %0.2f" % eval_result[1] + " seconds")
-
 
 def get_result_dataset(data, k=10, num_test=10):
     """
@@ -68,7 +58,7 @@ def get_result_dataset(data, k=10, num_test=10):
     length = len(data_back)
     joint = 5000
     datasets = []
-    check_time = length / joint
+    check_time = length // joint
     if length % joint == 0:
         check_time -= 1
     for i in range(check_time):
@@ -84,6 +74,7 @@ def get_result_dataset(data, k=10, num_test=10):
             result, eval_result = mondrian(temp, k, RELAX)
             if DATA_SELECT == 'a':
                 result = covert_to_raw(result)
+            write_to_file(result)
             ncp += eval_result[0]
             rtime += eval_result[1]
             data = copy.deepcopy(data_back)
@@ -92,7 +83,6 @@ def get_result_dataset(data, k=10, num_test=10):
         print("Average NCP %0.2f" % ncp + "%")
         print("Running time %0.2f" % rtime + " seconds")
         print('#' * 30)
-
 
 def get_result_qi(data, k=10):
     """
@@ -106,10 +96,10 @@ def get_result_qi(data, k=10):
         result, eval_result = mondrian(data, k, RELAX, i)
         if DATA_SELECT == 'a':
             result = covert_to_raw(result)
+        write_to_file(result)
         data = copy.deepcopy(data_back)
         print("NCP %0.2f" % eval_result[0] + "%")
         print("Running time %0.2f" % eval_result[1] + " seconds")
-
 
 def covert_to_raw(result, connect_str='~'):
     """
@@ -143,7 +133,6 @@ def covert_to_raw(result, connect_str='~'):
             covert_result.append(covert_record + [connect_str.join(record[-1])])
     return covert_result
 
-
 if __name__ == '__main__':
     FLAG = ''
     LEN_ARGV = len(sys.argv)
@@ -154,7 +143,6 @@ if __name__ == '__main__':
         MODEL = 's'
         DATA_SELECT = 'a'
     INPUT_K = 10
-    # read record
     if MODEL == 's':
         RELAX = False
     else:
@@ -164,15 +152,9 @@ if __name__ == '__main__':
     else:
         print("Strict Mondrian")
     if DATA_SELECT == 'i':
-        print("INFORMS data")
         DATA = read_informs()
     else:
-        print("Adult data")
-        # INTUITIVE_ORDER is an intuitive order for
-        # categorical attributes. This order is produced
-        # by the reading (from data set) order.
         DATA, INTUITIVE_ORDER = read_adult()
-        print(INTUITIVE_ORDER)
     if LEN_ARGV > 3:
         FLAG = sys.argv[3]
     if FLAG == 'k':
